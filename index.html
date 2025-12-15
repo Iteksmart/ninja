@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperNinja AI | Advanced Multi-Agent System with Virtual Computer</title>
+    <meta name="description" content="Autonomous AI agent with dedicated virtual computer for coding, research, data analysis, and automation. Featuring 40+ AI models, multi-agent coordination, and VS Code integration.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="ninja-loader">
+                <div class="ninja-icon">🤖</div>
+                <div class="loading-text">Initializing SuperNinja AI...</div>
+                <div class="loading-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div id="authSection">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                    <button class="auth-tab" onclick="switchAuthTab('register')">Sign Up</button>
+                </div>
+                
+                <form id="loginForm" class="auth-form">
+                    <h3>Login to SuperNinja AI</h3>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Login</button>
+                </form>
+                
+                <form id="registerForm" class="auth-form hidden">
+                    <h3>Create Account</h3>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subscription</label>
+                        <select name="subscription">
+                            <option value="ninja">Ninja (Free)</option>
+                            <option value="ultra">Ultra ($29/month)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>🤖 SuperNinja AI</h1>
+                    <span class="tagline">Advanced Multi-Agent System</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#dashboard" class="nav-link">Dashboard</a></li>
+                    <li><a href="#agents" class="nav-link">AI Agents</a></li>
+                    <li><a href="#virtual-computer" class="nav-link">Virtual Computer</a></li>
+                    <li><a href="#models" class="nav-link">AI Models</a></li>
+                    <li><a href="#integrations" class="nav-link">Integrations</a></li>
+                    <li><a href="#deep-research" class="nav-link">Deep Research</a></li>
+                    <li><a href="#deep-coding" class="nav-link">Deep Coding</a></li>
+                    <li><a href="#data-analysis" class="nav-link">Data Analysis</a></li>
+                    <li><a href="#image-generation" class="nav-link">Images</a></li>
+                    <li><a href="#scheduling" class="nav-link">Scheduling</a></li>
+                    <li><a href="#admin" class="nav-link">Admin</a></li>
+                    <li id="userInfo" class="user-info"></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span>⚡ SuperNinja 2.0</span>
+                </div>
+                <h2 class="hero-title">Autonomous AI Agent with <span class="highlight">Dedicated Virtual Computer</span></h2>
+                <p class="hero-subtitle">Multi-agent system powered by 40+ AI models. Complete GitHub integration, VS Code workspace, and autonomous development capabilities.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">40+</span>
+                        <span class="stat-label">AI Models</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Autonomous</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">VM Runtime</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-primary btn-large" onclick="showLoginModal()">Get Started Free</button>
+                    <button class="btn-outline btn-large" onclick="window.location.href='/admin/dashboard'">Admin Dashboard</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Interface -->
+        <div id="mainInterface" class="main-interface hidden">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <div class="container">
+                    <h2>Dashboard</h2>
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3>Virtual Computer Status</h3>
+                            <div id="vmStatus" class="vm-status">
+                                <p>No virtual computer running</p>
+                            </div>
+                            <div id="vmControls" class="vm-controls">
+                                <select id="vmSpecs">
+                                    <option value="standard">Standard (8CPU, 32GB RAM, 500GB)</option>
+                                    <option value="premium">Premium (16CPU, 64GB RAM, 1TB)</option>
+                                    <option value="enterprise">Enterprise (32CPU, 128GB RAM, 2TB)</option>
+                                </select>
+                                <button id="startVM" class="btn btn-success">Start Virtual Computer</button>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <h3>Integration Status</h3>
+                            <div id="githubStatus">🔗 GitHub: Not Connected</div>
+                            <div id="vsCodeStatus">💻 VS Code: Not Connected</div>
+                            <button id="connectGitHub" class="btn btn-primary">Connect GitHub</button>
+                            <button id="connectVSCode" class="btn btn-primary">Connect VS Code</button>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <h3>Recent Tasks</h3>
+                            <div id="tasksList" class="tasks-list">
+                                <p>No tasks yet</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <h3>Usage Statistics</h3>
+                            <div class="usage-stats">
+                                <div class="stat-item">
+                                    <span>API Requests:</span>
+                                    <span id="requestCount">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Tokens Used:</span>
+                                    <span id="tokenCount">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Images Generated:</span>
+                                    <span id="imageCount">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Agents Section -->
+            <section id="agents" class="content-section hidden">
+                <div class="container">
+                    <h2>AI Agents</h2>
+                    
+                    <!-- Agent Chat -->
+                    <div class="agent-chat-container">
+                        <div class="agent-controls">
+                            <select id="agentSelect">
+                                <option value="">Select Agent</option>
+                            </select>
+                            <select id="modelSelect">
+                                <option value="">Select Model</option>
+                            </select>
+                            <select id="modeSelect">
+                                <option value="standard">Standard</option>
+                                <option value="complex">Complex</option>
+                                <option value="fast">Fast</option>
+                            </select>
+                        </div>
+                        <div id="agentCapabilities" class="agent-capabilities"></div>
+                        <div id="chatMessages" class="chat-messages"></div>
+                        <div class="chat-input">
+                            <textarea id="messageInput" placeholder="Ask SuperAgent anything..."></textarea>
+                            <button id="sendMessage" class="btn btn-primary">Send</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Multi-Agent Coordination -->
+                    <div class="multi-agent-section">
+                        <h3>Multi-Agent Coordination</h3>
+                        <div class="agent-selection">
+                            <h4>Select Agents to Coordinate:</h4>
+                            <div id="agentCheckboxes" class="agent-checkboxes">
+                                <!-- Agent checkboxes will be populated here -->
+                            </div>
+                        </div>
+                        <div class="coordination-task">
+                            <textarea id="coordinationTask" placeholder="Describe the complex task you want multiple agents to work on..."></textarea>
+                            <button id="coordinateAgents" class="btn btn-primary">Coordinate Agents</button>
+                        </div>
+                        <div id="coordinationResults" class="coordination-results"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Virtual Computer Section -->
+            <section id="virtual-computer" class="content-section hidden">
+                <div class="container">
+                    <h2>Virtual Computer</h2>
+                    <div class="vm-interface">
+                        <div class="vm-terminal">
+                            <div class="terminal-header">
+                                <span>Virtual Computer Terminal</span>
+                                <span id="vmStatusIndicator" class="status-indicator offline">Offline</span>
+                            </div>
+                            <div id="vmTerminal" class="terminal-output"></div>
+                            <div class="terminal-input">
+                                <input type="text" id="vmCommand" placeholder="Enter command..." disabled />
+                                <button id="executeCommand" class="btn btn-primary" disabled>Execute</button>
+                            </div>
+                        </div>
+                        
+                        <div class="vm-file-manager">
+                            <h3>File Manager</h3>
+                            <div class="file-upload-area">
+                                <input type="file" id="fileUpload" multiple accept="*/*" />
+                                <div class="file-upload-btn">
+                                    <button class="btn btn-outline">Choose Files</button>
+                                    <span>or drag and drop</span>
+                                </div>
+                                <button id="uploadFiles" class="btn btn-primary">Upload to VM</button>
+                            </div>
+                            <div id="filePreview" class="file-preview"></div>
+                            <div id="fileAnalysis" class="file-analysis"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Models Section -->
+            <section id="models" class="content-section hidden">
+                <div class="container">
+                    <h2>AI Models</h2>
+                    <div class="models-grid">
+                        <div class="model-category">
+                            <h3>OpenAI Models</h3>
+                            <div class="model-list" id="openai-models"></div>
+                        </div>
+                        <div class="model-category">
+                            <h3>Anthropic Models</h3>
+                            <div class="model-list" id="anthropic-models"></div>
+                        </div>
+                        <div class="model-category">
+                            <h3>Google Models</h3>
+                            <div class="model-list" id="google-models"></div>
+                        </div>
+                        <div class="model-category">
+                            <h3>Meta Models</h3>
+                            <div class="model-list" id="meta-models"></div>
+                        </div>
+                        <div class="model-category">
+                            <h3>Ninja Models</h3>
+                            <div class="model-list" id="ninja-models"></div>
+                        </div>
+                        <div class="model-category">
+                            <h3>Other Models</h3>
+                            <div class="model-list" id="other-models"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Integrations Section -->
+            <section id="integrations" class="content-section hidden">
+                <div class="container">
+                    <h2>Integrations</h2>
+                    
+                    <!-- GitHub Integration -->
+                    <div class="integration-card">
+                        <h3>🔗 GitHub Integration</h3>
+                        <div class="integration-controls">
+                            <div id="githubStatus" class="integration-status"></div>
+                            <div class="github-connect">
+                                <input type="text" id="githubUsername" placeholder="GitHub Username" />
+                                <input type="password" id="githubToken" placeholder="Personal Access Token" />
+                                <button id="connectGitHub" class="btn btn-primary">Connect GitHub</button>
+                            </div>
+                            <div id="githubRepos" class="github-repos"></div>
+                            <div id="repoAnalysis" class="repo-analysis"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- VS Code Integration -->
+                    <div class="integration-card">
+                        <h3>💻 VS Code Integration</h3>
+                        <div class="integration-controls">
+                            <div id="vsCodeStatus" class="integration-status"></div>
+                            <div class="vscode-connect">
+                                <input type="text" id="workspacePath" placeholder="Workspace Path" />
+                                <input type="number" id="vscodePort" placeholder="Port (default: 3001)" value="3001" />
+                                <button id="connectVSCode" class="btn btn-primary">Connect VS Code</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deep Research Section -->
+            <section id="deep-research" class="content-section hidden">
+                <div class="container">
+                    <h2>Deep Researcher 2.0</h2>
+                    <div class="research-interface">
+                        <div class="research-input">
+                            <h3>Multi-Hop Research Query</h3>
+                            <textarea id="researchQuery" placeholder="Enter your research question. Deep Researcher 2.0 will perform comprehensive multi-source investigation with verified citations..."></textarea>
+                            <input type="text" id="researchSources" placeholder="Optional: Specify sources to focus on (e.g., academic papers, recent news, specific domains)" />
+                            <button id="startDeepResearch" class="btn btn-primary">Start Deep Research</button>
+                        </div>
+                        <div id="researchResults" class="research-results"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Deep Coding Section -->
+            <section id="deep-coding" class="content-section hidden">
+                <div class="container">
+                    <h2>Deep Coder</h2>
+                    <div class="coding-interface">
+                        <div class="coding-input">
+                            <h3>Full-Stack Development Request</h3>
+                            <textarea id="projectDescription" placeholder="Describe the complete application you want built. Deep Coder will create frontend, backend, database, testing, and deployment configurations..."></textarea>
+                            <input type="text" id="techStack" placeholder="Tech stack preference (e.g., React, Node.js, MongoDB, or leave empty for auto-selection)" />
+                            <input type="text" id="codingGitHubRepo" placeholder="GitHub repository for auto-commit (optional)" />
+                            <button id="startDeepCoding" class="btn btn-primary">Start Deep Coding</button>
+                        </div>
+                        <div id="codingResults" class="coding-results"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Analysis Section -->
+            <section id="data-analysis" class="content-section hidden">
+                <div class="container">
+                    <h2>Data Analyst</h2>
+                    <div class="analysis-interface">
+                        <div class="analysis-input">
+                            <h3>Data Analysis Request</h3>
+                            <textarea id="analysisQuery" placeholder="Describe what analysis you need. Data Analyst will process your uploaded data, create visualizations, and provide actionable insights..."></textarea>
+                            <div class="data-files-upload">
+                                <input type="file" id="dataFiles" multiple accept=".csv,.json,.xlsx,.xls" />
+                                <button id="uploadDataFiles" class="btn btn-outline">Upload Data Files</button>
+                            </div>
+                            <button id="startDataAnalysis" class="btn btn-primary">Start Data Analysis</button>
+                        </div>
+                        <div id="analysisResults" class="analysis-results"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Image Generation Section -->
+            <section id="image-generation" class="content-section hidden">
+                <div class="container">
+                    <h2>Image Generation</h2>
+                    <div class="image-interface">
+                        <div class="image-input">
+                            <h3>Generate Images with AI</h3>
+                            <textarea id="imagePrompt" placeholder="Describe the image you want to generate..."></textarea>
+                            <select id="imageModel">
+                                <option value="dall-e-3">DALL-E 3</option>
+                                <option value="dall-e-2">DALL-E 2</option>
+                                <option value="stable-diffusion-xl">Stable Diffusion XL</option>
+                            </select>
+                            <select id="imageSize">
+                                <option value="1024x1024">1024x1024</option>
+                                <option value="1792x1024">1792x1024</option>
+                                <option value="1024x1792">1024x1792</option>
+                            </select>
+                            <button id="generateImage" class="btn btn-primary">Generate Image</button>
+                        </div>
+                        <div id="imageGallery" class="image-gallery"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Scheduling Section -->
+            <section id="scheduling" class="content-section hidden">
+                <div class="container">
+                    <h2>AI Scheduling Assistant</h2>
+                    <div class="scheduling-interface">
+                        <div class="schedule-input">
+                            <h3>Schedule Meeting</h3>
+                            <input type="text" id="meetingTitle" placeholder="Meeting Title" />
+                            <textarea id="meetingDescription" placeholder="Meeting Description"></textarea>
+                            <input type="datetime-local" id="meetingStart" />
+                            <input type="datetime-local" id="meetingEnd" />
+                            <input type="text" id="meetingParticipants" placeholder="Participants (comma-separated emails)" />
+                            <input type="text" id="meetingLocation" placeholder="Location" />
+                            <label>
+                                <input type="checkbox" id="meetingVirtual" /> Virtual Meeting
+                            </label>
+                            <button id="scheduleMeeting" class="btn btn-primary">Schedule Meeting</button>
+                        </div>
+                        <div id="meetingsList" class="meetings-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Section (only for admins) -->
+            <section id="admin" class="content-section hidden">
+                <div class="container">
+                    <h2>Admin Dashboard</h2>
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <h3>Total Users</h3>
+                            <span id="totalUsers">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Active VMs</h3>
+                            <span id="activeVMs">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Requests</h3>
+                            <span id="totalRequests">0</span>
+                        </div>
+                        <div class="stat-card">
+                            <h3>API Keys</h3>
+                            <span id="apiKeysCount">0</span>
+                        </div>
+                    </div>
+                    <a href="https://3001-cee8a820-8eb4-4a7a-950e-7519a8b312f5.sandbox-service.public.prod.myninja.ai/admin/dashboard" class="btn btn-primary">Go to Full Admin Dashboard</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>SuperNinja AI</h4>
+                    <p>Advanced multi-agent system with virtual computer capabilities.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li>40+ AI Models</li>
+                        <li>Virtual Computer</li>
+                        <li>GitHub Integration</li>
+                        <li>VS Code Workspace</li>
+                        <li>Multi-Agent Coordination</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li>Documentation</li>
+                        <li>API Reference</li>
+                        <li>Community</li>
+                        <li>Status</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SuperNinja AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    
+    <script>
+        // Utility functions
+        function showLoginModal() {
+            document.getElementById('authModal').style.display = 'block';
+            document.getElementById('authSection').classList.remove('hidden');
+        }
+
+        function showSignupModal() {
+            document.getElementById('authModal').style.display = 'block';
+            switchAuthTab('register');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.auth-tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabs[0].classList.add('active');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function launchVirtualComputer() {
+            showLoginModal();
+        }
+
+        function viewDemo() {
+            alert('Demo video coming soon!');
+        }
+
+        // Loading screen
+        window.addEventListener('load', () => {
+            let progress = 0;
+            const progressFill = document.getElementById('progressFill');
+            const loadingScreen = document.getElementById('loading-screen');
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 30;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }
+                progressFill.style.width = progress + '%';
+            }, 200);
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target === modal) {
+                closeAuthModal();
+            }
+        }
+    </script>
+</body>
+</html>

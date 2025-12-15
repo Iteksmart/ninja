@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperNinja AI - Admin Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .admin-login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .admin-login-header {
+            margin-bottom: 30px;
+        }
+        
+        .admin-login-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .admin-login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .admin-form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .admin-form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .admin-form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .admin-login-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .admin-login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+            display: none;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .admin-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+    </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-card">
+            <div class="admin-login-header">
+                <div class="admin-badge">ADMIN ACCESS</div>
+                <h1>🛡️ Admin Login</h1>
+                <p>SuperNinja AI Dashboard</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <form id="adminLoginForm">
+                <div class="admin-form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+                
+                <div class="admin-form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="admin-login-btn" id="loginBtn">
+                    Login to Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="loading"></span>Authenticating...';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.user.role === 'admin') {
+                    // Store token in localStorage
+                    localStorage.setItem('adminToken', data.token);
+                    localStorage.setItem('adminUser', JSON.stringify(data.user));
+                    
+                    // Show success message
+                    successMessage.textContent = 'Login successful! Redirecting to dashboard...';
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect to admin dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/admin/dashboard';
+                    }, 1500);
+                } else if (response.ok && data.user.role !== 'admin') {
+                    errorMessage.textContent = 'Access denied. Admin privileges required.';
+                    errorMessage.style.display = 'block';
+                } else {
+                    errorMessage.textContent = data.error || 'Login failed. Please check your credentials.';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'block';
+            } finally {
+                // Reset button state
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Login to Dashboard';
+            }
+        });
+        
+        // Check if already logged in
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('adminToken');
+            if (token) {
+                // Verify token is still valid
+                fetch('/api/admin/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/admin/dashboard';
+                    } else {
+                        // Token is invalid, remove it
+                        localStorage.removeItem('adminToken');
+                        localStorage.removeItem('adminUser');
+                    }
+                })
+                .catch(() => {
+                    // Error checking token, remove it
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminUser');
+                });
+            }
+        });
+        
+        // Focus on username field
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>
